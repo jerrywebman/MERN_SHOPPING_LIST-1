@@ -4,6 +4,7 @@ const router = express.Router();
 
 //bring in our item module ../outside of the api folder ../outside of the routes folder
 const Item = require('../../models/Item');
+const auth = require('../../middleware/auth');
 
 //@route Get api/items
 //@desc get all items
@@ -18,9 +19,9 @@ router.get('/',(req, res) =>{
 
 //@route POST api/items
 //@desc post new items
-//@access public
+//@access private
 
-router.post('/',(req, res) =>{
+router.post('/', auth,(req, res) =>{
     const newItem = new Item({
         name: req.body.name
     });
@@ -31,7 +32,7 @@ router.post('/',(req, res) =>{
 //@desc DELETE EXISTING item
 //@access public
 
-router.delete('/:id',(req, res) =>{
+router.delete('/:id', auth,(req, res) =>{
     Item.findById(req.params.id)
         .then(item => item.remove().then(() => res.json({success: true})))
         .catch(err => res.status(404).json({success: false}));

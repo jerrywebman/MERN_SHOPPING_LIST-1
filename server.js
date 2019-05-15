@@ -1,27 +1,30 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const path = require('path');
+const config = require('config');
 
-//require the items route file
-const items = require('./routes/api/items');
 
 const app = express();
 
-// bodyparser middleware
-app.use(bodyParser.json());
+// express (bodyparser) middleware
+app.use(express.json());
 
 //DB config
-const db = require('./config/keys').mongoURI;
+const db = config.get('mongoURI');
 
 //connect to Mongo
 mongoose
-    .connect(db, { useNewUrlParser: true })
+    .connect(db, { 
+        useNewUrlParser: true,
+        useCreateIndex: true
+     })
     .then(() => console.log('mongo connected'))
     .catch(err => console.log(err));
 
 //using the routes
-app.use('/api/items', items);
+app.use('/api/items', require('./routes/api/items'));
+app.use('/api/users', require('./routes/api/users'));
+app.use('/api/auth', require('./routes/api/auth'));
 
 //serve static assets in production and deploy to heroku
 //check if our node environment === production

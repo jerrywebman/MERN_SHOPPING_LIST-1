@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     Collapse,
     Navbar,
@@ -9,31 +9,32 @@ import {
     NavLink,
     Container
 } from 'reactstrap';
+import RegisterModal from './auth/RegisterModal';
 
-class AppNavbar extends Component{
-    constructor(){
+class AppNavbar extends Component {
+    constructor() {
         super()
         this.state = {
             isOpen: false
         }
     }
-    toggle = () =>{
+    toggle = () => {
         this.setState({
             isOpen: !this.state.isOpen
         });
     }
-    render(){
-        return(
+    render() {
+        return (
             <div>
                 <Navbar color="dark" dark expand="sm" className="mb-5">
                     <Container>
                         <NavbarBrand href="/">ShoppingList</NavbarBrand>
-                        <NavbarToggler onClick ={this.toggle} />
+                        <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
-                            <Nav ClassName="ml-auto" navbar>
+                            <Nav className="ml-auto" navbar>
                                 <NavItem>
-                                    <NavLink href="https://github.com">Github</NavLink>
-                                </NavItem> 
+                                    <RegisterModal />
+                                </NavItem>
                             </Nav>
                         </Collapse>
                     </Container>
