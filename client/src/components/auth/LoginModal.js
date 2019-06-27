@@ -13,14 +13,13 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { register } from '../../actions/authActions';
+import { login } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';
 //its good to store ur form input state in your component
 
-class RegisterModal extends Component {
+class LoginModal extends Component {
     state = {
         modal: false,
-        name: '',
         email: '',
         password: '',
         msg: null
@@ -29,7 +28,7 @@ class RegisterModal extends Component {
     static propTypes = {
         isAuthenticated: PropTypes.bool,
         error: PropTypes.object.isRequired,
-        register: PropTypes.func.isRequired,
+        login: PropTypes.func.isRequired,
         clearErrors: PropTypes.func.isRequired
     };
 
@@ -37,7 +36,7 @@ class RegisterModal extends Component {
         const { error, isAuthenticated } = this.props;
         if (error !== prevProps.error) {
             //check for register error
-            if (error.id === 'REGISTER_FAIL') {
+            if (error.id === 'LOGIN_FAIL') {
                 this.setState({ msg: error.msg.msg });//from the redux state
             } else {
                 this.setState({ msg: null });
@@ -69,44 +68,34 @@ class RegisterModal extends Component {
     onSubmit = e => {
         //since its a form we need to prevent the normal way the form submits
         e.preventDefault();
-        //get the name ,email and password from the state
-        const { name, email, password } = this.state;
+        // get email and password from the component state
+        const { email, password } = this.state;
 
-        //create user object
-        const newUser = {
-            name,
+        //create a user object to submit the email and password
+        const user = {
             email,
             password
-        };
+        }
 
-        //attempt to register
-        this.props.register(newUser);
+        //attempt to login
+        this.props.login(user);
+    };
 
-    }
+
     render() {
         return (
             <div>
-                <NavLink onClick={this.toggle} href="#">Register</NavLink>
+                <NavLink onClick={this.toggle} href="#">Login</NavLink>
 
                 <Modal
                     isOpen={this.state.modal}
                     toggle={this.toggle}
                 >
-                    <ModalHeader toggle={this.toggle}>Register</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>Login</ModalHeader>
                     <ModalBody>
                         {this.state.msg ? <Alert color="danger">{this.state.msg}</Alert> : null}
                         <Form onSubmit={this.onSubmit}>
                             <FormGroup>
-                                <Label for="name">Name</Label>
-                                <Input
-                                    type="text"
-                                    //name is same in the state
-                                    name="name"
-                                    id=" name"
-                                    placeholder="name"
-                                    className='mb-3'
-                                    onChange={this.onChange}
-                                />
 
                                 <Label for="email">Email</Label>
                                 <Input
@@ -129,7 +118,7 @@ class RegisterModal extends Component {
                                     onChange={this.onChange}
                                 />
                                 <Button
-                                    color="dark" style={{ marginTop: '2rem' }} block>Register</Button>
+                                    color="dark" style={{ marginTop: '2rem' }} block>Login</Button>
                             </FormGroup>
 
                         </Form>
@@ -144,4 +133,4 @@ const mapStateToProps = state => ({//error and auth is gotten from the root redu
     isAuthenticated: state.auth.isAuthenticated,
     error: state.error
 });
-export default connect(mapStateToProps, { register, clearErrors })(RegisterModal);
+export default connect(mapStateToProps, { login, clearErrors })(LoginModal);

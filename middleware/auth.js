@@ -15,7 +15,7 @@ function auth(req, res, next) {
         req.user = decoded;
         next();//this calls the next peice of middleware
     } catch (e) {
-        res.status(400), json({ msg: 'Token is invalid' })
+        res.status(400).json({ msg: 'Token is invalid' })
     }
 }
 

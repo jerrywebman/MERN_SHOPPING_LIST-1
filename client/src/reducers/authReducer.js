@@ -10,7 +10,7 @@ import {
 } from '../actions/types';
 
 const initialState = {
-    token: localStorage.getItem('token'),// getting thee token from the local storage
+    token: localStorage.getItem('token'),// getting the token from the local storage
     isAuthenticated: null,
     isLoading: false,
     user: null
@@ -35,9 +35,9 @@ export default function (state = initialState, action) {
             localStorage.setItem('token', action.payload.token);//set the token to localstorage
             return {
                 ...state,
+                ...action.payload,
                 isAuthenticated: true,
                 isLoading: false,
-                ...action.payload
             };
         case AUTH_ERROR:
         case LOGIN_FAIL:

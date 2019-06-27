@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     Container,
     ListGroup,
@@ -6,37 +6,44 @@ import {
     Button
 } from 'reactstrap';
 
-import {CSSTransition, TransitionGroup} from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { connect } from 'react-redux';
 import { getItems, deleteItem } from '../actions/itemActions';
 import PropTypes from 'prop-types';
 
 
-class ShoppingList extends Component{
-    
-    componentDidMount(){
+class ShoppingList extends Component {
+
+    componentDidMount() {
         this.props.getItems();
     }
 
-    onDeleteClick(id){
+    static propTypes = {
+        isAuthenticated: PropTypes.bool,
+        getItems: PropTypes.func.isRequired,
+        item: PropTypes.object.isRequired
+    }
+
+    onDeleteClick(id) {
         this.props.deleteItem(id);
     }
-    
-    render(){
+
+    render() {
         //we will be using destructuring array here
-        const {items} = this.props.item;
-        return(
+        const { items } = this.props.item;
+        return (
             <Container>
                 <ListGroup>
-                    <TransitionGroup className ="shopping-list">
-                        {items.map(({_id, name}) =>(
-                            <CSSTransition key ={_id} timeout={500} classNames="fade">
+                    <TransitionGroup className="shopping-list">
+                        {items.map(({ _id, name }) => (
+                            <CSSTransition key={_id} timeout={500} classNames="fade">
                                 <ListGroupItem>
-                                    <Button className="remove-btn" color="danger" size="sm" onClick={this.onDeleteClick.bind(this, _id)
-                                        }>
+                                    {this.props.isAuthenticated ? <Button className="remove-btn" color="danger" size="sm" onClick={this.onDeleteClick.bind(this, _id)
+                                    }>
                                         &times;
-                                    </Button>
-                                    {name}
+                                    </Button> : null}
+                                    <strong> {name}</strong>
+
                                 </ListGroupItem>
                             </CSSTransition>
                         ))}
@@ -47,13 +54,10 @@ class ShoppingList extends Component{
     }
 }
 
-ShoppingList.propTypes = {
-    getItems: PropTypes.func.isRequired,
-    item: PropTypes.object.isRequired
-}
-const mapStateToProps =(state)=>({
+const mapStateToProps = (state) => ({
     //item here is what we use in our reducer
-    item: state.item
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(mapStateToProps, { getItems, deleteItem })(ShoppingList);

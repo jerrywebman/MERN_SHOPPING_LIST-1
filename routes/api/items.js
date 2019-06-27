@@ -10,10 +10,10 @@ const auth = require('../../middleware/auth');
 //@desc get all items
 //@access public
 
-router.get('/',(req, res) =>{
+router.get('/', (req, res) => {
     //take the model(Item) and find(.find) and sort by date
     Item.find()
-        .sort({date: -1 })
+        .sort({ date: -1 })
         .then(items => res.json(items));
 });
 
@@ -21,7 +21,7 @@ router.get('/',(req, res) =>{
 //@desc post new items
 //@access private
 
-router.post('/', auth,(req, res) =>{
+router.post('/', auth, (req, res) => {
     const newItem = new Item({
         name: req.body.name
     });
@@ -30,12 +30,12 @@ router.post('/', auth,(req, res) =>{
 
 //@route DELETE api/items/:id
 //@desc DELETE EXISTING item
-//@access public
+//@access private
 
-router.delete('/:id', auth,(req, res) =>{
+router.delete('/:id', auth, (req, res) => {
     Item.findById(req.params.id)
-        .then(item => item.remove().then(() => res.json({success: true})))
-        .catch(err => res.status(404).json({success: false}));
+        .then(item => item.remove().then(() => res.json({ success: true })))
+        .catch(err => res.status(404).json({ success: false }));
 });
 
 
